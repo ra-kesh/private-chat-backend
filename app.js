@@ -6,6 +6,8 @@ import path from "path";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
+import User from "./models/User.js";
+
 dotenv.config();
 
 mongoose
@@ -20,8 +22,35 @@ mongoose
 
 const app = express();
 
+app.use(express.json());
+
 app.get("/", (req, res) => {
   res.send("Private chat app backend is running");
+});
+
+app.post("/register", async (req, res) => {
+  const { username, email, password } = req.body;
+
+  try {
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ mesg: "User already exist" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    user = new User({
+      username,
+      email,
+      password: hashedPassword,
+    });
+
+    await user.save();
+
+    res.status(201).json({ msg: "User registration successfull" });
+  } catch (error) {
+    res.status(500).json({ msg: "server error", error });
+  }
 });
 
 const _dirname = path.resolve();
