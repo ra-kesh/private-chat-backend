@@ -4,6 +4,7 @@ import https from "https";
 import path from "path";
 
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 import mongoose from "mongoose";
 import dotenv from "dotenv";
@@ -13,6 +14,7 @@ import User from "./models/User.js";
 dotenv.config();
 
 mongoose
+  // eslint-disable-next-line no-undef
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -71,6 +73,7 @@ app.post("/login", async (req, res) => {
       return res.status(400).json({ msg: "Invalida credentials" });
     }
 
+    // eslint-disable-next-line no-undef
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
