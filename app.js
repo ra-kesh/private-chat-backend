@@ -3,6 +3,8 @@ import fs from "fs";
 import https from "https";
 import path from "path";
 
+import bcrypt from "bcryptjs";
+
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
